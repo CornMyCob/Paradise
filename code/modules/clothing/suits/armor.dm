@@ -477,3 +477,18 @@
 	max_heat_protection_temperature = ARMOR_MAX_TEMP_PROTECT
 	burn_state = FIRE_PROOF
 	armor = list(melee = 25, bullet = 15, laser = 25, energy = 10, bomb = 25, bio = 0, rad = 0)
+
+//LAVALAND!
+
+/obj/item/clothing/suit/hooded/cloak/drake
+	name = "drake armour"
+	icon_state = "dragon"
+	item_state = "dragon"
+	desc = "A suit of armour fashioned from the remains of an ash drake."
+	allowed = list(/obj/item/flashlight, /obj/item/tank, /obj/item/resonator, /obj/item/mining_scanner, /obj/item/t_scanner/adv_mining_scanner, /obj/item/gun/energy/kinetic_accelerator, /obj/item/pickaxe, /obj/item/twohanded/spear)
+	armor = list("melee" = 70, "bullet" = 30, "laser" = 50, "energy" = 40, "bomb" = 70, "bio" = 60, "rad" = 50, "fire" = 100, "acid" = 100)
+	hoodtype = /obj/item/clothing/head/hooded/cloakhood/drake
+	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	max_heat_protection_temperature = FIRE_IMMUNITY_SUIT_MAX_TEMP_PROTECT
+	resistance_flags = FIRE_PROOF

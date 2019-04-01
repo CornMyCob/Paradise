@@ -144,6 +144,8 @@
 		*/
 		if(istype(R, /datum/map_template/ruin/space))
 			space_ruins_templates[R.name] = R
+		if(istype(R, /datum/map_template/ruin/lavaland))
+			lava_ruins_templates[R.name] = R
 
 /proc/preloadShelterTemplates()
 	for(var/item in subtypesof(/datum/map_template/shelter))

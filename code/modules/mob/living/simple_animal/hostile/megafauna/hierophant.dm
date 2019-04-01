@@ -32,7 +32,7 @@ Difficulty: Hard
 
 /mob/living/simple_animal/hostile/megafauna/hierophant
 	name = "Hierophant"
-	desc = "An ancient, powerful priest-like being wielding a mighty staff."
+	desc = "A massive metal club that hangs in the air as though waiting. It'll make you dance to its beat."
 	health = 2500
 	maxHealth = 2500
 	attacktext = "clubs"
@@ -50,7 +50,7 @@ Difficulty: Hard
 	speed = 1
 	move_to_delay = 10
 	ranged = 1
-	pixel_x = -16
+	pixel_y = -16
 	ranged_cooldown_time = 40
 	aggro_vision_range = 23
 	loot = list(/obj/item/hierophant_staff)

@@ -381,6 +381,33 @@
 /datum/action/item_action/remove_badge
 	name = "Remove Holobadge"
 
+/datum/action/item_action/bhop
+	name = "Activate Jump Boots"
+	desc = "Activates the jump boot's internal propulsion system, allowing the user to dash over 4-wide gaps."
+	icon_icon = 'icons/mob/actions/actions.dmi'
+	button_icon_state = "jetboot"
+	var/jumpdistance = 5 //-1 from to see the actual distance, e.g 4 goes over 3 tiles
+	var/jumpspeed = 3
+	var/recharging_rate = 60 //default 6 seconds between each dash
+	var/recharging_time = 0
+
+/datum/action/item_action/bhop/Trigger()
+	if(!isliving(owner))
+		return
+
+	if(recharging_time > world.time)
+		to_chat(owner, "<span class='warning'>The boot's internal propulsion needs to recharge still!</span>")
+		return
+
+	var/atom/target = get_edge_target_turf(owner, owner.dir) //gets the user's direction
+
+	if (owner.throw_at(target, jumpdistance, jumpspeed, spin = FALSE, diagonals_first = TRUE))
+		playsound(src, 'sound/effects/stealthoff.ogg', 50, 1, 1)
+		owner.visible_message("<span class='warning'>[usr] dashes forward into the air!</span>")
+		recharging_time = world.time + recharging_rate
+	else
+		to_chat(owner, "<span class='warning'>Something prevents you from dashing forward!</span>")
+
 ///prset for organ actions
 /datum/action/item_action/organ_action
 	check_flags = AB_CHECK_CONSCIOUS

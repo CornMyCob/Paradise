@@ -58,6 +58,7 @@ var/global/pipe_processing_killed = 0
 	setupfactions()
 	setup_economy()
 
+	//seedRuins(5, 100, /area/lavaland, lava_ruins_templates)
 	for(var/i=0, i<max_secret_rooms, i++)
 		make_mining_asteroid_secret()
 

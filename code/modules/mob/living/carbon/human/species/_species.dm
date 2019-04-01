@@ -159,6 +159,11 @@
 	// Species specific boxes
 	var/speciesbox
 
+	//Bitflag that controls what in game ways can select this species as a spawnable source
+	//Think magic mirror and pride mirror, slime extract, ERT etc, see defines
+	//in __DEFINES/mobs.dm, defaults to NONE, so people actually have to think about it
+	var/changesource_flags = NONE
+
 /datum/species/New()
 	//If the species has eyes, they are the default vision organ
 	if(!vision_organ && has_organ["eyes"])

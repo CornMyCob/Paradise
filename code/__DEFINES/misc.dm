@@ -118,9 +118,13 @@
 //Some defs may be pure color- this is for neatness, and configurability. Changing #define COLOR_ is a bad idea.
 #define LIGHT_COLOR_CYAN		"#7BF9FF"
 #define LIGHT_COLOR_PURE_CYAN	"#00FFFF"
+#define LIGHT_COLOR_SLIME_LAMP "#AFC84B" //Weird color, between yellow and green, very slimy. rgb(175, 200, 75)
+#define LIGHT_COLOR_BLUEGREEN  "#7DE1AF" //Light blueish green. rgb(125, 225, 175)
+#define LIGHT_COLOR_LIGHT_CYAN "#40CEFF" //More-saturated cyan. rgb(64, 206, 255)
 
 #define LIGHT_COLOR_RED			"#B40000"
 #define LIGHT_COLOR_ORANGE		"#FF9933"
+#define LIGHT_COLOR_FLARE      "#FA644B" //Bright, non-saturated red. Leaning slightly towards pink for visibility. rgb(250, 100, 75)
 #define LIGHT_COLOR_DARKRED		"#A91515"
 #define LIGHT_COLOR_PURE_RED	"#FF0000"
 
@@ -136,6 +140,7 @@
 #define LIGHT_COLOR_FADEDPURPLE	"#A97FAA"
 #define LIGHT_COLOR_PURPLE		"#CD00CD"
 #define LIGHT_COLOR_PINK		"#FF33CC"
+#define LIGHT_COLOR_LAVENDER   "#9B51FF" //Less-saturated light purple. rgb(155, 81, 255)
 
 #define LIGHT_COLOR_YELLOW     "#E1E17D" //Dimmed yellow, leaning kaki. rgb(225, 225, 125)
 
@@ -395,3 +400,8 @@
 // Defib stats
 #define DEFIB_TIME_LIMIT 120
 #define DEFIB_TIME_LOSS 60
+
+//gold slime core spawning
+#define NO_SPAWN 0
+#define HOSTILE_SPAWN 1
+#define FRIENDLY_SPAWN 2

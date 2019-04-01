@@ -81,6 +81,8 @@ var/global/list/rockTurfEdgeCache = list(
 	log_startup_progress("Reticulating splines...")
 	for(var/turf/simulated/mineral/M in GLOB.mineral_turfs)
 		M.add_edges()
+	for(var/turf/simulated/mineral/lavaland/L in GLOB.lavaland_mineral_turfs)
+		L.add_edges()
 	log_startup_progress(" Splines reticulated in [stop_watch(watch)]s.")
 	return 1
 

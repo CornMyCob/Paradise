@@ -33,3 +33,18 @@
 /turf/unsimulated/wall/abductor
 	icon_state = "alien1"
 	explosion_block = 50
+
+/turf/unsimulated/wall/riveted/boss
+	name = "necropolis wall"
+	desc = "A thick, seemingly indestructible stone wall."
+	icon = 'icons/turf/walls/boss_wall.dmi'
+	icon_state = "wall"
+	canSmoothWith = list(/turf/unsimulated/wall/riveted/boss)
+	explosion_block = 50
+	oxygen = 14
+	nitrogen = 23
+	temperature = 300
+	smooth = SMOOTH_TRUE
+
+/turf/unsimulated/wall/riveted/boss/see_through
+	opacity = FALSE

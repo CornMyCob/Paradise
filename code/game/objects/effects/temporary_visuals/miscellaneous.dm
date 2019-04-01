@@ -140,6 +140,9 @@
 	..()
 	animate(src, alpha = 0, time = duration)
 
+/obj/effect/temp_visual/decoy/fading/halfsecond
+	duration = 5
+
 /obj/effect/temp_visual/revenant
 	name = "spooky lights"
 	icon_state = "purplesparkles"

@@ -143,6 +143,15 @@ var/global/list/potentialRandomZlevels = generateMapList(filename = "config/away
 	var/initialbudget = budget
 	var/watch = start_watch()
 
+	//Handle forcing, for lavaland
+	for(var/key in ruins)
+		var/datum/map_template/ruin/R = ruins[key]
+		if(R.always_place)
+			var/turf/T = locate(rand(TRANSITION_BORDER_WEST + (8 + R.width/2), TRANSITION_BORDER_EAST - (8 + R.width/2)), rand(TRANSITION_BORDER_SOUTH + (8 + R.height/2), TRANSITION_BORDER_NORTH - (8 + R.height/2)), z_level)
+			var/obj/effect/ruin_loader/L = new /obj/effect/ruin_loader(T)
+			L.Load(ruins,R)
+			log_world("  Force-Loaded Ruin \"[R.name]\" in [stop_watch(watch)]s at ([T.x], [T.y], [T.z]).")
+
 	while(budget > 0 && overall_sanity > 0)
 		// Pick a ruin
 		var/datum/map_template/ruin/ruin = ruins[pick(ruins)]

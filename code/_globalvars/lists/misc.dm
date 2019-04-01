@@ -35,6 +35,7 @@ GLOBAL_LIST_INIT(restricted_camera_networks, list(
 	)) //Those networks can only be accessed by preexisting terminals. AIs and new terminals can't use them.
 
 GLOBAL_LIST_INIT(mineral_turfs, list())
+GLOBAL_LIST_INIT(lavaland_mineral_turfs, list())
 
 GLOBAL_LIST_INIT(ruin_landmarks, list())
 
@@ -59,3 +60,6 @@ GLOBAL_LIST_INIT(cooking_reagents, list(RECIPE_MICROWAVE = list(), RECIPE_OVEN =
 GLOBAL_LIST(station_level_space_turfs)
 
 #define EGG_LAYING_MESSAGES list("lays an egg.", "squats down and croons.", "begins making a huge racket.", "begins clucking raucously.")
+
+GLOBAL_LIST_INIT(alldirs, list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST))
+GLOBAL_LIST_INIT(cardinals, list(NORTH, SOUTH, EAST, WEST))

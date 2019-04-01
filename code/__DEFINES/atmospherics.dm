@@ -120,3 +120,9 @@
 #define ATMOS_ALARM_NONE					0
 #define ATMOS_ALARM_WARNING					1
 #define ATMOS_ALARM_DANGER					2
+
+//Lavaland
+#define LAVALAND_EQUIPMENT_EFFECT_PRESSURE 50 //what pressure you have to be under to increase the effect of equipment meant for lavaland
+#define LAVALAND_DEFAULT_ATMOS "o2=14;n2=23;TEMP=300"
+#define FROZEN_ATMOS				"o2=22;n2=82;TEMP=180" //-93.15°C snow and ice turfs
+#define AIRLESS_ATMOS				"TEMP=2.7" //space

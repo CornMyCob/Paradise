@@ -88,3 +88,12 @@
 		"human" = list('sound/effects/footstep/wood_all.ogg'), //@RonaldVanWonderen of Freesound.org
 		"xeno"  = list('sound/effects/footstep/wood_all.ogg')  //@RonaldVanWonderen of Freesound.org
 	)
+
+/turf/unsimulated/floor/boss //base, add stone  tiles
+	name = "necropolis floor"
+	icon = 'icons/turf/floors/boss_floor.dmi'
+	icon_state = "boss"
+	desc = "It's regarding you suspiciously."
+	oxygen = 14
+	nitrogen = 23
+	temperature = 300

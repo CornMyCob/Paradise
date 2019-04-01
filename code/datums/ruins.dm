@@ -9,7 +9,7 @@
 
 	var/cost = null
 	var/allow_duplicates = FALSE //A bit boring, don't you think? You can always explicitly allow it on a ruin definition
-
+	var/always_place = FALSE //Will skip the whole weighting process and just plop this down, ideally you want the ruins of this kind to have no cost.
 	var/prefix = null
 	var/suffix = null
 

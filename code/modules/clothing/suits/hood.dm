@@ -17,6 +17,9 @@
 /obj/item/clothing/head/culthood
 	flags = NODROP
 
+/obj/item/clothing/head/hooded/cloakhood/drake
+	flags = NODROP
+
 /obj/item/clothing/head/culthood/alt
 	flags = NODROP
 

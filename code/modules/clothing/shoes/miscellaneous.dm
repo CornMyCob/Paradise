@@ -113,6 +113,13 @@
 	can_cut_open = 1
 	icon_state = "workboots"
 
+/obj/item/clothing/shoes/workboots/mining
+	name = "mining boots"
+	desc = "Steel-toed mining boots for mining in hazardous environments. Very good at keeping toes uncrushed."
+	icon_state = "explorer"
+	can_cut_open = 0
+	resistance_flags = FIRE_PROOF
+
 /obj/item/clothing/shoes/winterboots
 	name = "winter boots"
 	desc = "Boots lined with 'synthetic' animal fur."

@@ -484,3 +484,13 @@
 	desc = "Wearing this makes you feel like a real mozzarella cheeseball. "
 	icon_state = "zepelli"
 	item_state = "zepelli"
+
+/obj/item/clothing/head/hooded/cloakhood/drake
+	name = "drake helmet"
+	icon_state = "dragon"
+	item_state = "dragon"
+	desc = "The skull of a dragon."
+	armor = list("melee" = 70, "bullet" = 30, "laser" = 50, "energy" = 40, "bomb" = 70, "bio" = 60, "rad" = 50, "fire" = 100, "acid" = 100)
+	heat_protection = HEAD
+	max_heat_protection_temperature = FIRE_IMMUNITY_HELM_MAX_TEMP_PROTECT
+	resistance_flags = FIRE_PROOF

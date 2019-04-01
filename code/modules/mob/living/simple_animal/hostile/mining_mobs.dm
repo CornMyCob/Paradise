@@ -15,6 +15,7 @@
 	a_intent = INTENT_HARM
 	var/throw_message = "bounces off of"
 	var/icon_aggro = null // for swapping to when we get aggressive
+	var/fromtendril = FALSE
 	see_in_dark = 8
 	see_invisible = SEE_INVISIBLE_MINIMUM
 	mob_size = MOB_SIZE_LARGE
@@ -46,6 +47,7 @@
 			return
 	..()
 
+//A beast that fire freezing blasts.
 /mob/living/simple_animal/hostile/asteroid/basilisk
 	name = "basilisk"
 	desc = "A territorial beast, covered in a thick shell that absorbs energy. Its stare causes victims to freeze from the inside."
@@ -74,37 +76,118 @@
 	a_intent = INTENT_HARM
 	speak_emote = list("chitters")
 	attack_sound = 'sound/weapons/bladeslice.ogg'
+	vision_range = 2
 	aggro_vision_range = 9
-	idle_vision_range = 2
 	turns_per_move = 5
-	loot = list(/obj/item/stack/ore/diamond{layer = 4.1},
-				/obj/item/stack/ore/diamond{layer = 4.1})
+	gold_core_spawnable = HOSTILE_SPAWN
+	loot = list(/obj/item/stack/ore/diamond{layer = ABOVE_MOB_LAYER},
+				/obj/item/stack/ore/diamond{layer = ABOVE_MOB_LAYER})
 
 /obj/item/projectile/temp/basilisk
 	name = "freezing blast"
 	icon_state = "ice_2"
 	damage = 0
 	damage_type = BURN
-	nodamage = 1
+	nodamage = TRUE
 	flag = "energy"
 	temperature = 50
 
-/mob/living/simple_animal/hostile/asteroid/basilisk/GiveTarget(var/new_target)
+/mob/living/simple_animal/hostile/asteroid/basilisk/GiveTarget(new_target)
 	if(..()) //we have a target
-		if(isliving(target))
-			var/mob/living/L = target
-			if(L.bodytemperature > 261)
-				L.bodytemperature = 261
-				visible_message("<span class='danger'>The [src.name]'s stare chills [L.name] to the bone!</span>")
+		if(isliving(target) && !target.Adjacent(targets_from) && ranged_cooldown <= world.time)//No more being shot at point blank or spammed with RNG beams
+			OpenFire(target)
 
-/mob/living/simple_animal/hostile/asteroid/basilisk/ex_act(severity)
+/mob/living/simple_animal/hostile/asteroid/basilisk/ex_act(severity, target)
 	switch(severity)
-		if(1.0)
+		if(1)
 			gib()
-		if(2.0)
+		if(2)
 			adjustBruteLoss(140)
-		if(3.0)
+		if(3)
 			adjustBruteLoss(110)
+
+//Watcher
+/mob/living/simple_animal/hostile/asteroid/basilisk/watcher
+	name = "watcher"
+	desc = "A levitating, eye-like creature held aloft by winglike formations of sinew. A sharp spine of crystal protrudes from its body."
+	icon = 'icons/mob/lavaland/watcher.dmi'
+	icon_state = "watcher"
+	icon_living = "watcher"
+	icon_aggro = "watcher"
+	icon_dead = "watcher_dead"
+	weather_immunities = list("lava","ash")
+	pixel_x = -10
+	throw_message = "bounces harmlessly off of"
+	melee_damage_lower = 15
+	melee_damage_upper = 15
+	attacktext = "impales"
+	a_intent = INTENT_HARM
+	speak_emote = list("telepathically cries")
+	attack_sound = 'sound/weapons/bladeslice.ogg'
+	stat_attack = UNCONSCIOUS
+	robust_searching = 1
+	loot = list()
+	butcher_results = list(/obj/item/stack/ore/diamond = 2, /obj/item/stack/sheet/sinew = 2, /obj/item/stack/sheet/bone = 1)
+
+/mob/living/simple_animal/hostile/asteroid/basilisk/watcher/random/Initialize()
+	. = ..()
+	if(prob(1))
+		if(prob(75))
+			new /mob/living/simple_animal/hostile/asteroid/basilisk/watcher/magmawing(loc)
+		else
+			new /mob/living/simple_animal/hostile/asteroid/basilisk/watcher/icewing(loc)
+		return INITIALIZE_HINT_QDEL
+
+/mob/living/simple_animal/hostile/asteroid/basilisk/watcher/magmawing
+	name = "magmawing watcher"
+	desc = "When raised very close to lava, some watchers adapt to the extreme heat and use lava as both a weapon and wings."
+	icon_state = "watcher_magmawing"
+	icon_living = "watcher_magmawing"
+	icon_aggro = "watcher_magmawing"
+	icon_dead = "watcher_magmawing_dead"
+	maxHealth = 215 //Compensate for the lack of slowdown on projectiles with a bit of extra health
+	health = 215
+	light_range = 3
+	light_power = 2.5
+	light_color = LIGHT_COLOR_ORANGE
+	projectiletype = /obj/item/projectile/temp/basilisk/magmawing
+
+/mob/living/simple_animal/hostile/asteroid/basilisk/watcher/icewing
+	name = "icewing watcher"
+	desc = "Very rarely, some watchers will eke out an existence far from heat sources. In the absence of warmth, they become icy and fragile but fire much stronger freezing blasts."
+	icon_state = "watcher_icewing"
+	icon_living = "watcher_icewing"
+	icon_aggro = "watcher_icewing"
+	icon_dead = "watcher_icewing_dead"
+	maxHealth = 170
+	health = 170
+	projectiletype = /obj/item/projectile/temp/basilisk/icewing
+	butcher_results = list(/obj/item/stack/ore/diamond = 5, /obj/item/stack/sheet/bone = 1) //No sinew; the wings are too fragile to be usable
+
+/obj/item/projectile/temp/basilisk/magmawing
+	name = "scorching blast"
+	icon_state = "lava"
+	damage = 5
+	damage_type = BURN
+	nodamage = FALSE
+	temperature = 500 //Heats you up!
+
+/obj/item/projectile/temp/basilisk/magmawing/on_hit(atom/target, blocked = FALSE)
+	. = ..()
+	if(.)
+		var/mob/living/L = target
+		if (istype(L))
+			L.adjust_fire_stacks(0.1)
+			L.IgniteMob()
+
+/obj/item/projectile/temp/basilisk/icewing
+	damage = 5
+	damage_type = BURN
+	nodamage = FALSE
+
+/mob/living/simple_animal/hostile/asteroid/basilisk/watcher/tendril
+	fromtendril = TRUE
+
 
 /mob/living/simple_animal/hostile/asteroid/goliath
 	name = "goliath"
@@ -140,6 +223,7 @@
 	move_resist = MOVE_FORCE_VERY_STRONG
 	pull_force = MOVE_FORCE_VERY_STRONG
 	var/pre_attack = 0
+	var/pre_attack_icon = "Goliath_preattack"
 	loot = list(/obj/item/asteroid/goliath_hide{layer = 4.1})
 
 /mob/living/simple_animal/hostile/asteroid/goliath/process_ai()
@@ -151,7 +235,7 @@
 		pre_attack++
 	if(!pre_attack || stat || AIStatus == AI_IDLE)
 		return
-	icon_state = "Goliath_preattack"
+	icon_state = pre_attack_icon
 
 /mob/living/simple_animal/hostile/asteroid/goliath/revive()
 	move_force = MOVE_FORCE_VERY_STRONG

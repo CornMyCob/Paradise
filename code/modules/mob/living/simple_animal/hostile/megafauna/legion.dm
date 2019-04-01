@@ -37,6 +37,7 @@ Difficulty: Medium
 	retreat_distance = 5
 	minimum_distance = 5
 	ranged_cooldown_time = 20
+	wander = 0
 	var/size = 5
 	var/charging = 0
 	medal_type = MEDAL_PREFIX

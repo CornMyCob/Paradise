@@ -126,6 +126,32 @@
 /obj/item/organ/internal/hivelord_core/prepare_eat()
 	return null
 
+/*************************Legion core********************/
+/obj/item/organ/internal/hivelord_core/legion
+	desc = "A strange rock that crackles with power. It can be used to heal completely, but it will rapidly decay into uselessness."
+	icon_state = "legion_soul"
+
+/obj/item/organ/internal/hivelord_core/legion/Initialize()
+	. = ..()
+	update_icon()
+
+/obj/item/organ/internal/hivelord_core/legion/update_icon()
+	icon_state = inert ? "legion_soul_inert" : "legion_soul"
+	cut_overlays()
+	if(!inert && !preserved)
+		add_overlay("legion_soul_crackle")
+	for(var/X in actions)
+		var/datum/action/A = X
+		A.UpdateButtonIcon()
+
+/obj/item/organ/internal/hivelord_core/legion/go_inert()
+	..()
+	desc = "[src] has become inert. It has decayed, and is completely useless."
+
+/obj/item/organ/internal/hivelord_core/legion/preserved(implanted = 0)
+	..()
+	desc = "[src] has been stabilized. It is preserved, allowing you to use it to heal completely without danger of decay."
+
 /mob/living/simple_animal/hostile/asteroid/hivelordbrood
 	name = "hivelord brood"
 	desc = "A fragment of the original Hivelord, rallying behind its original. One isn't much of a threat, but..."
@@ -225,6 +251,7 @@
 	icon_aggro = "legion"
 	icon_dead = "legion"
 	icon_gib = "syndicate_gib"
+	weather_immunities = list("lava","ash")
 	melee_damage_lower = 15
 	melee_damage_upper = 15
 	attacktext = "lashes out at"
@@ -329,6 +356,7 @@
 	icon_state = "skull"
 
 
+//Tendril-spawned Legion remains, the charred skeletons of those whose bodies sank into laval or fell into chasms.
 /obj/effect/mob_spawn/human/corpse/charredskeleton
 	name = "charred skeletal remains"
 	burn_damage = 1000
@@ -337,3 +365,117 @@
 	husk = FALSE
 	mob_species = /datum/species/skeleton
 	mob_color = "#454545"
+
+/obj/effect/mob_spawn/human/corpse/damaged/legioninfested/Initialize()
+	uniform = /obj/item/clothing/under/rank/miner
+	if (prob(4))
+		belt = /obj/item/storage/belt/utility/full/multitool
+	else if(prob(10))
+		belt = pickweight(list(/obj/item/pickaxe = 8, /obj/item/pickaxe/silver = 2, /obj/item/pickaxe/diamond = 1))
+	else
+		belt = /obj/item/tank/emergency_oxygen/engi
+	. = ..()
+
+/mob/living/simple_animal/hostile/asteroid/hivelord/legion/random/Initialize()
+	. = ..()
+
+/mob/living/simple_animal/hostile/asteroid/hivelord/legion/death(gibbed)
+	visible_message("<span class='warning'>The skulls on [src] wail in anger as they flee from their dying host!</span>")
+	var/turf/T = get_turf(src)
+	if(T)
+		if(stored_mob)
+			stored_mob.forceMove(get_turf(src))
+			stored_mob = null
+		else if(fromtendril)
+			new /obj/effect/mob_spawn/human/corpse/charredskeleton(T)
+		else
+			new /obj/effect/mob_spawn/human/corpse/damaged/legioninfested(T)
+	..(gibbed)
+
+/mob/living/simple_animal/hostile/asteroid/hivelord/legion/tendril
+	fromtendril = TRUE
+
+//Legion skull
+/mob/living/simple_animal/hostile/asteroid/hivelordbrood/legion
+	name = "legion"
+	desc = "One of many."
+	icon = 'icons/mob/lavaland/lavaland_monsters.dmi'
+	icon_state = "legion_head"
+	icon_living = "legion_head"
+	icon_aggro = "legion_head"
+	icon_dead = "legion_head"
+	icon_gib = "syndicate_gib"
+	friendly = "buzzes near"
+	weather_immunities = list("lava","ash")
+	vision_range = 10
+	maxHealth = 1
+	health = 5
+	harm_intent_damage = 5
+	melee_damage_lower = 12
+	melee_damage_upper = 12
+	attacktext = "bites"
+	speak_emote = list("echoes")
+	attack_sound = 'sound/weapons/pierce.ogg'
+	throw_message = "is shrugged off by"
+	pass_flags = PASSTABLE
+	del_on_death = TRUE
+	stat_attack = UNCONSCIOUS
+	robust_searching = 1
+	var/can_infest_dead = FALSE
+
+/mob/living/simple_animal/hostile/asteroid/hivelordbrood/legion/Life()
+	if(isturf(loc))
+		for(var/mob/living/carbon/human/H in view(src,1)) //Only for corpse right next to/on same tile
+			if(H.stat == UNCONSCIOUS || (can_infest_dead && H.stat == DEAD))
+				infest(H)
+	..()
+
+//Advanced Legion is slightly tougher to kill and can raise corpses (revive other legions)
+/mob/living/simple_animal/hostile/asteroid/hivelord/legion/advanced
+	stat_attack = DEAD
+	maxHealth = 120
+	health = 120
+	brood_type = /mob/living/simple_animal/hostile/asteroid/hivelordbrood/legion/advanced
+	icon_state = "dwarf_legion"
+	icon_living = "dwarf_legion"
+	icon_aggro = "dwarf_legion"
+	icon_dead = "dwarf_legion"
+
+/mob/living/simple_animal/hostile/asteroid/hivelordbrood/legion/advanced
+	stat_attack = DEAD
+	can_infest_dead = TRUE
+
+//Legion that spawns Legions
+/mob/living/simple_animal/hostile/spawner/legion
+	name = "legion"
+	desc = "One of many."
+	icon = 'icons/mob/lavaland/dragon.dmi'
+	icon_state = "legion"
+	icon_living = "legion"
+	icon_dead = "legion"
+	health = 450
+	maxHealth = 450
+	max_mobs = 3	
+	spawn_time = 200	
+	spawn_text = "peels itself off from"	
+	mob_type = /mob/living/simple_animal/hostile/asteroid/hivelord/legion
+	melee_damage_lower = 20
+	melee_damage_upper = 20
+	anchored = FALSE
+	AIStatus = AI_ON
+	stop_automated_movement = FALSE
+	wander = TRUE
+	maxbodytemp = INFINITY
+	layer = MOB_LAYER
+	del_on_death = TRUE
+	sentience_type = SENTIENCE_BOSS
+	loot = list(/obj/item/organ/internal/hivelord_core/legion = 3, /obj/effect/mob_spawn/human/corpse/damaged/legioninfested = 5)
+	move_to_delay = 14
+	vision_range = 5
+	aggro_vision_range = 9
+	speed = 3
+	faction = list("mining")
+	weather_immunities = list("lava","ash")
+	obj_damage = 30
+	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
+	see_in_dark = 8

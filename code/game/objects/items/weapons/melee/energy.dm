@@ -6,6 +6,9 @@
 	var/w_class_on = WEIGHT_CLASS_BULKY
 	var/icon_state_on = "axe1"
 	var/list/attack_verb_on = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
+	var/faction_bonus_force = 0 //Bonus force dealt against certain factions
+	var/bonus_active = FALSE //If the faction damage bonus is active
+	var/list/nemesis_factions //Any mob with a faction that exists in this list will take bonus damage/effects
 	hitsound = 'sound/weapons/blade1.ogg' // Probably more appropriate than the previous hitsound. -- Dave
 	usesound = 'sound/weapons/blade1.ogg'
 	toolspeed = 1

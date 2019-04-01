@@ -441,6 +441,23 @@
 		new /datum/data/mining_equipment("Point Transfer Card", /obj/item/card/mining_point_card,               			   500),
 		)
 
+/obj/machinery/mineral/equipment_vendor/lavaland //Items a bit too powerful for the regular mining asteroid
+	name = "lavaland mining equipment vendor"
+
+/obj/machinery/mineral/equipment_vendor/lavaland/Initialize()
+	. = ..()
+	desc += "\nIt seems a few selections have been added."
+	prize_list += list(
+		new /datum/data/mining_equipment("Mining Conscription Kit",     	/obj/item/storage/backpack/duffel/mining_conscript, 				1000),
+		new /datum/data/mining_equipment("Shelter Capsule",					/obj/item/survivalcapsule,											400),
+		new /datum/data/mining_equipment("Luxury Shelter Capsule",			/obj/item/survivalcapsule/luxury,	    							3000),
+		new /datum/data/mining_equipment("Jump Boots",						/obj/item/storage/shoes/mining/jump,        						2500),
+		new /datum/data/mining_equipment("1 Marker Beacon",					/obj/item/stack/marker_beacon,										10),
+		new /datum/data/mining_equipment("10 Marker Beacons",				/obj/item/stack/marker_beacon/ten,									100),
+		new /datum/data/mining_equipment("30 Marker Beacons",				/obj/item/stack/marker_beacon/thirty,								300),
+		new /datum/data/mining_equipment("Explorer\'s Webbing",				/obj/item/storage/belt/mining,										500)
+		)
+
 /obj/machinery/mineral/equipment_vendor/golem
 	name = "golem ship equipment vendor"
 
@@ -643,6 +660,34 @@
 	..(user)
 	to_chat(user, "There's [points] points on the card.")
 
+/obj/item/card/id/mining_access_card
+	name = "mining access card"
+	desc = "A small card, that when used on any ID, will add mining access."
+	icon_state = "data_1"
+
+/obj/item/card/id/mining_access_card/afterattack(atom/movable/AM, mob/user, proximity)
+	. = ..()
+	if(istype(AM, /obj/item/card/id) && proximity)
+		var/obj/item/card/id/I = AM
+		access=list(access_mining, access_mining_station, access_mineral_storeroom, access_cargo)
+		to_chat(user, "You upgrade [I] with mining access.")
+		qdel(src)
+
+/obj/item/storage/backpack/duffel/mining_conscript
+	name = "mining conscription kit"
+	desc = "A kit containing everything a crewmember needs to support a shaft miner in the field."
+
+/obj/item/storage/backpack/duffel/mining_conscript/New()
+	..()
+	new /obj/item/pickaxe(src)
+	new /obj/item/clothing/glasses/meson(src)
+	new /obj/item/t_scanner/adv_mining_scanner/lesser(src)
+	new /obj/item/storage/bag/ore(src)
+	new /obj/item/clothing/under/rank/miner/lavaland(src)
+	new /obj/item/encryptionkey/headset_cargo(src)
+	new /obj/item/clothing/mask/gas(src)
+	new /obj/item/card/id/mining_access_card(src)
+
 /**********************Jaunter**********************/
 
 /obj/item/wormhole_jaunter
@@ -656,6 +701,25 @@
 	throw_speed = 3
 	throw_range = 5
 	origin_tech = "bluespace=2"
+
+/obj/item/wormhole_jaunter/proc/chasm_react(mob/user)
+	if(user.get_item_by_slot(SLOT_BELT) == src)
+		to_chat(user, "Your [name] activates, saving you from the chasm!</span>")
+		var/list/L = list()
+		for(var/obj/item/radio/beacon/B in world)
+			var/turf/T = get_turf(B)
+			if(is_station_level(T.z))
+				L += B
+		if(!L.len)
+			to_chat(user, "<span class='notice'>The [src.name] failed to create a wormhole.</span>")
+			return
+		var/chosen_beacon = pick(L)
+		var/obj/effect/portal/wormhole/jaunt_tunnel/J = new /obj/effect/portal/wormhole/jaunt_tunnel(get_turf(src), chosen_beacon, lifespan=100)
+		try_move_adjacent(J)
+		playsound(src,'sound/effects/sparks4.ogg',50,1)
+		qdel(src)
+	else
+		to_chat(user, "[src] is not attached to your belt, preventing it from saving you from the chasm. RIP.</span>")
 
 /obj/item/wormhole_jaunter/attack_self(mob/user)
 	var/turf/device_turf = get_turf(user)
